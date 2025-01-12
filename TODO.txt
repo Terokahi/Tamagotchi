@@ -1,0 +1,5 @@
+add Shop
+add Items
+add ability to raise Stats
+
+add Icons, chars, and bg

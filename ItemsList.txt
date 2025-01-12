@@ -1,0 +1,19 @@
+Name=Stone0
+Effect=None0
+Description=It's a stone, what'd you expect?
+Price=WIP
+
+Name=Stone1
+Effect=None1
+Description=It's another Stone, what'd you think would happen???
+Price=WIP
+
+Name=Glowing Rock
+Effect=None2
+Description=It's glowing green, so it's good for me right?
+Price=WIP
+
+Name=Test
+Effect=Blah
+Description=Don't look at me
+Price=hubba bubba
