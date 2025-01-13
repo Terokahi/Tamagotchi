@@ -14,45 +14,47 @@ Store = Shop.shop()
 class TamamochiLoop:
     async def start(self):
         self.Window = Screen(asyncio.get_event_loop())
-        await asyncio.sleep(.5)
+        await self.Window.display()
 
 # create Screen
 class Screen:
     def __init__(self, loop):
         self.loop = loop
         self.root = tk.Tk()
-        self.mainframe = ttk.Frame(self.root, padding="3 3 12 12")
         
         # Give Window a Name
         self.root.title("Tamamochi")
-
+        
         # Stats Display
-        self.Health = Tamamochi.stats[0]
-        self.Hunger = Tamamochi.stats[1]
-        self.Energy = Tamamochi.stats[2]
-        self.Fun = Tamamochi.stats[3]
+        self.Health = IntVar(Tamamochi.stats[0])
+        self.Hunger = IntVar(Tamamochi.stats[1])
+        self.Energy = IntVar(Tamamochi.stats[2])
+        self.Fun = IntVar(Tamamochi.stats[3])
         
         # Stats Labels
-        self.healthLabel = tk.Label(self.mainframe, text="Health").grid(column=0, row=0),
-        self.hungerLabel = tk.Label(self.mainframe, text="Hunger").grid(column=0, row=1),
-        self.energyLabel = tk.Label(self.mainframe, text="Energy").grid(column=0, row=2),
-        self.funLabel = tk.Label(self.mainframe, text="Fun").grid(column=0, row=3)
+        self.healthLabel = tk.Label(text="Health").grid(column=0, row=0)
+        
+        self.hungerLabel = tk.Label(text="Hunger").grid(column=0, row=1)
+        
+        self.energyLabel = tk.Label(text="Energy").grid(column=0, row=2)
+
+        self.funLabel = tk.Label(text="Fun").grid(column=0, row=3) 
 
         # Stats State
-        self.healthStat = tk.Label(self.mainframe, textvariable=self.Health).grid(column=1, row=0)
-        self.hungerStat = tk.Label(self.mainframe, textvariable=self.Hunger).grid(column=1, row=1)
-        self.energyStat = tk.Label(self.mainframe, textvariable=self.Energy).grid(column=1, row=2)
-        self.funStat = tk.Label(self.mainframe, textvariable=self.Fun).grid(column=1, row=3)
+        self.healthStat = tk.Label(textvariable=self.Health).grid(column=1, row=0)
+        self.hungerStat = tk.Label(textvariable=self.Hunger).grid(column=1, row=1)
+        self.energyStat = tk.Label(textvariable=self.Energy).grid(column=1, row=2)
+        self.funStat = tk.Label(textvariable=self.Fun).grid(column=1, row=3)
 
         # Stats Buttons
-        self.healthButton = tk.Button(self.mainframe, text="Bandage", command=modStats())
-    
-    async def modStats(Health = -10, Hunger = -5, Energy = -4, Fun = -14):
-        Tamamochi.mod(Health, Hunger, Energy, Fun)
-        
-    
-    async def display(self):
-        pass
 
+        print("Screen succesfully init")
+
+    # 'Tis be the loop for reducing stats
+    async def display(self):
+        while True:        
+            self.root.update()
+            await asyncio.sleep(.5)
+    
 if __name__ == "__main__":
     asyncio.run(TamamochiLoop().start())
