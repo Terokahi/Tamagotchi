@@ -44,24 +44,40 @@ class Screen:
         self.statsDict = [StringVar(self.root, Tamamochi.stats[i]) for i in range(4)]
         
         # Stats Labels
-        tk.Label(text="Health").grid(column=0, row=0)
-        tk.Label(text="Hunger").grid(column=1, row=0)
-        tk.Label(text="Energy").grid(column=2, row=0)
-        tk.Label(text="Fun").grid(column=3, row=0) 
+        self.healthLabel = tk.Label(text="Health")
+        self.hungerLabel = tk.Label(text="Hunger")
+        self.energyLabel = tk.Label(text="Energy")
+        self.funLabel = tk.Label(text="Fun") 
 
         # Stats State
-        tk.Label(textvariable=self.statsDict[0]).grid(column=0, row=2)
-        tk.Label(textvariable=self.statsDict[1]).grid(column=1, row=2)
-        tk.Label(textvariable=self.statsDict[2]).grid(column=2, row=2)
-        tk.Label(textvariable=self.statsDict[3]).grid(column=3, row=2)
+        self.healthStat = tk.Label(textvariable=self.statsDict[0])
+        self.hungerStat = tk.Label(textvariable=self.statsDict[1])
+        self.energyStat = tk.Label(textvariable=self.statsDict[2])
+        self.funStat = tk.Label(textvariable=self.statsDict[3])
 
         # Stats Buttons
-        tk.Button(text="Heal", command=self.heal).grid(column=0, row=3)
-        tk.Button(text="Feed", command=self.feed).grid(column=1, row=3)
-        tk.Button(text="Sleep", command=self.sleep).grid(column=2, row=3)
-        tk.Button(text="Play", command=self.play).grid(column=3, row=3)
+        self.healthButton = tk.Button(text="Heal", command=self.heal)
+        self.hungerButton = tk.Button(text="Feed", command=self.feed)
+        self.energyButton = tk.Button(text="Sleep", command=self.sleep)
+        self.funButton = tk.Button(text="Play", command=self.play)
 
-        print("Screen succesfully init")
+        # Label and Button grids
+        self.healthLabel.grid(column=0, row=0)
+        self.hungerLabel.grid(column=1, row=0)
+        self.energyLabel.grid(column=2, row=0)
+        self.funLabel.grid(column=3, row=0)
+
+        self.healthStat.grid(column=0, row=2)
+        self.hungerStat.grid(column=1, row=2)
+        self.energyStat.grid(column=2, row=2)
+        self.funStat.grid(column=3, row=2)
+
+        self.healthButton.grid(column=0, row=3)
+        self.hungerButton.grid(column=1, row=3)
+        self.energyButton.grid(column=2, row=3)
+        self.funButton.grid(column=3, row=3)
+
+        print("Screen succesfully initialized")
 
     # 'Tis be the loop for reducing stats
     async def display(self):
@@ -69,7 +85,7 @@ class Screen:
         This method is the main loop for the Tamagotchi program.
         """
         tick = 0
-        print("Ticks succesfully started")
+        print("Ticks succesfully initialized")
         while True:
             if tick % 300 == 0:
                 await self.const_mod_stats()
@@ -121,9 +137,13 @@ class Screen:
         """This method is called when the Tamagotchi dies."""
         for stat in Tamamochi.stats:
             if stat == 0:
-                self.root.children.clear()
+                self.healthButton.grid_forget()
+                self.hungerButton.grid_forget()
+                self.energyButton.grid_forget()
+                self.funButton.grid_forget()
+                
                 tk.Label(self.root, text="Your Tamamochi is dead!").grid(columnspan=2, column=1, row=1)
-                    
+                print("It ded")
 
 if __name__ == "__main__":
     asyncio.run(TamamochiLoop().start())
