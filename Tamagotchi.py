@@ -21,7 +21,7 @@ class Tamagotchi:
         :param modEnergy: The amount to modify the energy by.
         :param modFun: The amount to modify the fun by.
         """
-        modStats =[modHealth, modHunger, modEnergy, modFun]
+        modStats = [modHealth, modHunger, modEnergy, modFun]
         for i in range(len(self.stats)):
             if self.stats[i] + modStats[i] <= 0:
                 self.stats[i] = 0

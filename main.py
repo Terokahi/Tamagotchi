@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 
 import asyncio
+import random as rng
 
 import Tamagotchi as Tamgo
 import Shop
@@ -14,7 +15,7 @@ from tkinter import *
 Store = Shop.shop()
 
 # Start the Loop
-class TamamochiLoop:
+class main_loop:
     """
     This class is the main loop for the Tamagotchi program.
     """
@@ -56,10 +57,17 @@ class Screen:
         self.funStat = tk.Label(textvariable=self.statsDict[3])
 
         # Stats Buttons
-        self.healthButton = tk.Button(text="Heal", command=self.heal)
-        self.hungerButton = tk.Button(text="Feed", command=self.feed)
-        self.energyButton = tk.Button(text="Sleep", command=self.sleep)
-        self.funButton = tk.Button(text="Play", command=self.play)
+        self.healthButton = tk.Button(text="Heal", command=lambda: 
+                                      self.mod_stats(rng.randint(20, 40), rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(-12, 0)))
+        
+        self.hungerButton = tk.Button(text="Feed", command=lambda: 
+                                      self.mod_stats(rng.randint(-12, 0), rng.randint(20, 40), rng.randint(-12, 0), rng.randint(-12, 0)))
+        
+        self.energyButton = tk.Button(text="Sleep", command=lambda: 
+                                      self.mod_stats(rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(20, 40), rng.randint(-12, 0)))
+        
+        self.funButton = tk.Button(text="Play", command=lambda: 
+                                      self.mod_stats(rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(20,40)))
 
         # Label and Button grids
         self.healthLabel.grid(column=0, row=0)
@@ -85,25 +93,28 @@ class Screen:
         This method is the main loop for the Tamagotchi program.
         """
         tick = 0
-        print("Ticks succesfully initialized")
         while True:
-            if tick % 300 == 0:
-                await self.const_mod_stats()
+            tick += 1
+            if tick % 30 == 0:
+                if await self.const_mod_stats(rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(-12, 0), rng.randint(-12, 0)):
+                    break
                 tick = 0
             self.root.update()
             await asyncio.sleep(.1)
-            tick += 1
 
-    async def const_mod_stats(self, Health=-3, Hunger=-2, Energy=-1, Fun=-15):
+    async def const_mod_stats(self, Health, Hunger, Energy, Fun):
         """
         This method modifies the stats of the Tamagotchi by a constant amount.
         """
         Tamamochi.mod(Health,Hunger,Energy,Fun)
+        if self.death():
+            return True
         for i in range(len(self.statsDict)):
             self.statsDict[i].set(Tamamochi.stats[i])
-        self.death()
+            if self.death():
+                return True
     
-    def mod_stats(self, Health=-6, Hunger=-4, Energy=-3, Fun=-12):
+    def mod_stats(self, Health, Hunger, Energy, Fun):
         """
         This method modifies the stats of the Tamagotchi by a given amount.
         """
@@ -112,41 +123,22 @@ class Screen:
             self.statsDict[i].set(Tamamochi.stats[i])
         self.death()
 
-    def heal(self):
-        """
-        This method increases the health of the Tamagotchi by 24.
-        """
-        self.mod_stats(Health=24)
-    def feed(self):
-        """
-        This method increases the hunger of the Tamagotchi by 23.
-        """
-        self.mod_stats(Hunger=23)
-    def sleep(self):
-        """
-        This method increases the energy of the Tamagotchi by 8.
-        """
-        self.mod_stats(Energy=32)
-    def play(self):
-        """
-        This method increases the fun of the Tamagotchi by 46.
-        """
-        self.mod_stats(Fun=46)
-
     def death(self):
         """This method is called when the Tamagotchi dies."""
         for stat in Tamamochi.stats:
             if stat == 0:
-                self.healthButton.grid_forget()
-                self.hungerButton.grid_forget()
-                self.energyButton.grid_forget()
-                self.funButton.grid_forget()
+                self.healthButton.destroy()
+                self.hungerButton.destroy()
+                self.energyButton.destroy()
+                self.funButton.destroy()
                 
                 tk.Label(self.root, text="Your Tamamochi is dead!").grid(columnspan=2, column=1, row=1)
                 print("It ded")
+                return True
+        
 
 if __name__ == "__main__":
-    asyncio.run(TamamochiLoop().start())
+    asyncio.run(main_loop().start())
 
 
 
